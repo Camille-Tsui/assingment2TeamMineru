@@ -27,5 +27,89 @@ import utilities.ListADT;
  */
 public class MyArrayList implements ListADT
 {
+
+	@Override
+	public int size() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean add(int index, String toAdd) throws NullPointerException, IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean add(String toAdd) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(ListADT toAdd) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String get(int index) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String remove(int index) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String remove(String toRemove) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String set(int index, String toChange) throws NullPointerException, IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean contains(String toFind) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int indexOf(String toFind) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String[] toArray(String[] toHold) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
    
 }
