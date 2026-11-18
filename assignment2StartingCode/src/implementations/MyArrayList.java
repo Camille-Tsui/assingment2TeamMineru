@@ -194,22 +194,47 @@ public class MyArrayList implements ListADT
 		if (toHold == null) {
 			throw new NullPointerException();
 		}
-		// if list is already correct size
-		if (list.length == size()) {
-			return list;
+		
+		//check if size large enough
+		if (toHold.length < size()) {
+			toHold = new String[size()];
 		}
 		
-		// of list is not correct size
-		String[] copy = new String[size()];
-		copy = Arrays.copyOf(list, size());
+		//copy elements
+		for (int i = 0; i < size(); i++) {
+			toHold[i] = list[i];
+		}
 		
-		return copy;
+		return toHold;
 	}
 
 	@Override
 	public Iterator iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		String[] copy = toArray(new String[size()]);
+
+		
+		return new Iterator() {
+			int index = 0;
+
+			@Override
+			public boolean hasNext() {
+				if (index < copy.length) {
+					return true;
+				}
+				return false;
+			}
+
+			@Override
+			public String next() throws NoSuchElementException {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
+				
+				String element = copy[index];
+				index += 1;
+				return element;
+			}
+		};
 	}
 	
 	//should increase list size by 25%
