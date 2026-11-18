@@ -27,89 +27,194 @@ import utilities.ListADT;
  */
 public class MyArrayList implements ListADT
 {
-
+	String[] list = new String[10];
+	int size = 0;
+	
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+//		int counter = 0;
+//		for (String element : list) {
+//			if (element == null) {
+//				return counter;
+//			}
+//			counter += 1;
+//		}
+//		return 0;
+		
+		return size;
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		for (int i = size() - 1; i >= 0; i--) {
+			list[i] = null;
+			size -= 1;
+		}
 	}
 
 	@Override
 	public boolean add(int index, String toAdd) throws NullPointerException, IndexOutOfBoundsException {
-		// TODO Auto-generated method stub
-		return false;
+		if (toAdd == null) {
+			throw new NullPointerException();
+		}
+		if (index < 0 || index > size()) {
+			throw new IndexOutOfBoundsException();
+		}
+		
+		for (int i = size; i > index; i--) {
+			list[i] = list[i-1];
+		}
+		
+		list[index] = toAdd;
+		size += 1;
+		return true;
 	}
 
 	@Override
 	public boolean add(String toAdd) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return false;
+		if (toAdd == null) {
+			throw new NullPointerException();
+		}
+		if (list.length == size()) {
+			//add if size too small
+		}
+		list[size()] = toAdd;
+		size += 1;
+		return true;
 	}
 
 	@Override
 	public boolean addAll(ListADT toAdd) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return false;
+		if (toAdd == null) {
+			throw new NullPointerException();
+		}
+		//add if size is too small
+
+		Iterator it = toAdd.iterator();
+		while (it.hasNext()) {
+			add(it.next());
+		}
+		return true;
 	}
 
 	@Override
 	public String get(int index) throws IndexOutOfBoundsException {
-		// TODO Auto-generated method stub
-		return null;
+		if (index > size() - 1) {
+			throw new IndexOutOfBoundsException();
+		}
+		return list[index];
 	}
 
 	@Override
 	public String remove(int index) throws IndexOutOfBoundsException {
-		// TODO Auto-generated method stub
-		return null;
+		if (index > size() - 1 || index < 0) {
+			throw new IndexOutOfBoundsException();
+		}
+		
+		//overwrite index and shifting elements back down
+		String element = list[index];
+		for (int i = index; i < size(); i++) {
+			list[i] = list[i + 1];
+		}
+		size -= 1;
+		return element;
 	}
 
 	@Override
 	public String remove(String toRemove) throws NullPointerException {
-		// TODO Auto-generated method stub
+		if (toRemove == null) {
+			throw new NullPointerException();
+		}
+		
+		int index = indexOf(toRemove);
+		
+		if (index != -1) {
+			String element = list[index];
+			remove(index);
+			return element;
+		}
+		
 		return null;
 	}
 
 	@Override
 	public String set(int index, String toChange) throws NullPointerException, IndexOutOfBoundsException {
-		// TODO Auto-generated method stub
-		return null;
+		if (toChange == null) {
+			throw new NullPointerException();
+		}
+		if (index < 0 || index >= size()) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		
+		String oldElement = list[index];
+		list[index] = toChange;
+		
+		return oldElement;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
+		if (size <= 0) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean contains(String toFind) throws NullPointerException {
-		// TODO Auto-generated method stub
+		if (toFind == null) {
+			throw new NullPointerException();
+		}
+		
+		for (int i = 0; i < size(); i++) {
+			if (list[i] == toFind) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public int indexOf(String toFind) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (toFind == null) {
+			throw new NullPointerException();
+		}
+		
+		for (int i = 0; i < size(); i++) {
+			if (list[i] == toFind) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	@Override
 	public String[] toArray(String[] toHold) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if (toHold == null) {
+			throw new NullPointerException();
+		}
+		// if list is already correct size
+		if (list.length == size()) {
+			return list;
+		}
+		
+		// of list is not correct size
+		String[] copy = new String[size()];
+		copy = Arrays.copyOf(list, size());
+		
+		return copy;
 	}
 
 	@Override
 	public Iterator iterator() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	//should increase list size by 25%
+	private void IncreaseSize() {
+		
 	}
    
 }
