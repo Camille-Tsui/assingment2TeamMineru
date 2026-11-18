@@ -25,28 +25,22 @@ import utilities.ListADT;
  * as {@link String} throughout this class and its implementations.
  * </p>
  */
+
+
 public class MyArrayList implements ListADT
 {
 	String[] list = new String[10];
 	int size = 0;
+	float growthRate = 0.25f;
 	
 	@Override
-	public int size() {
-//		int counter = 0;
-//		for (String element : list) {
-//			if (element == null) {
-//				return counter;
-//			}
-//			counter += 1;
-//		}
-//		return 0;
-		
+	public int size() {		
 		return size;
 	}
 
 	@Override
 	public void clear() {
-		for (int i = size() - 1; i >= 0; i--) {
+		for (int i = size - 1; i >= 0; i--) {
 			list[i] = null;
 			size -= 1;
 		}
@@ -57,8 +51,12 @@ public class MyArrayList implements ListADT
 		if (toAdd == null) {
 			throw new NullPointerException();
 		}
-		if (index < 0 || index > size()) {
+		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
+		}
+		
+		if (list.length == size) {
+			increaseSize();
 		}
 		
 		for (int i = size; i > index; i--) {
@@ -75,10 +73,11 @@ public class MyArrayList implements ListADT
 		if (toAdd == null) {
 			throw new NullPointerException();
 		}
-		if (list.length == size()) {
-			//add if size too small
+		if (list.length == size) {
+			increaseSize();
 		}
-		list[size()] = toAdd;
+		
+		list[size] = toAdd;
 		size += 1;
 		return true;
 	}
@@ -88,8 +87,7 @@ public class MyArrayList implements ListADT
 		if (toAdd == null) {
 			throw new NullPointerException();
 		}
-		//add if size is too small
-
+		
 		Iterator it = toAdd.iterator();
 		while (it.hasNext()) {
 			add(it.next());
@@ -99,7 +97,7 @@ public class MyArrayList implements ListADT
 
 	@Override
 	public String get(int index) throws IndexOutOfBoundsException {
-		if (index > size() - 1) {
+		if (index > size - 1) {
 			throw new IndexOutOfBoundsException();
 		}
 		return list[index];
@@ -107,13 +105,13 @@ public class MyArrayList implements ListADT
 
 	@Override
 	public String remove(int index) throws IndexOutOfBoundsException {
-		if (index > size() - 1 || index < 0) {
+		if (index > size - 1 || index < 0) {
 			throw new IndexOutOfBoundsException();
 		}
 		
 		//overwrite index and shifting elements back down
 		String element = list[index];
-		for (int i = index; i < size(); i++) {
+		for (int i = index; i < size; i++) {
 			list[i] = list[i + 1];
 		}
 		size -= 1;
@@ -142,7 +140,7 @@ public class MyArrayList implements ListADT
 		if (toChange == null) {
 			throw new NullPointerException();
 		}
-		if (index < 0 || index >= size()) {
+		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -167,7 +165,7 @@ public class MyArrayList implements ListADT
 			throw new NullPointerException();
 		}
 		
-		for (int i = 0; i < size(); i++) {
+		for (int i = 0; i < size; i++) {
 			if (list[i] == toFind) {
 				return true;
 			}
@@ -181,7 +179,7 @@ public class MyArrayList implements ListADT
 			throw new NullPointerException();
 		}
 		
-		for (int i = 0; i < size(); i++) {
+		for (int i = 0; i < size; i++) {
 			if (list[i] == toFind) {
 				return i;
 			}
@@ -196,12 +194,12 @@ public class MyArrayList implements ListADT
 		}
 		
 		//check if size large enough
-		if (toHold.length < size()) {
-			toHold = new String[size()];
+		if (toHold.length < size) {
+			toHold = new String[size];
 		}
 		
 		//copy elements
-		for (int i = 0; i < size(); i++) {
+		for (int i = 0; i < size; i++) {
 			toHold[i] = list[i];
 		}
 		
@@ -210,7 +208,7 @@ public class MyArrayList implements ListADT
 
 	@Override
 	public Iterator iterator() {
-		String[] copy = toArray(new String[size()]);
+		String[] copy = toArray(new String[size]);
 
 		
 		return new Iterator() {
@@ -238,8 +236,21 @@ public class MyArrayList implements ListADT
 	}
 	
 	//should increase list size by 25%
-	private void IncreaseSize() {
+	private void increaseSize() {
+		int newSize = (int)((float)size * (1 + growthRate));
+		//make sure size increases by at least 1
+		if (newSize == size) {
+			newSize += 1;
+		}
 		
+		String[] newList = new String[newSize];
+		
+		
+		for (int i = 0; i < size; i++) {
+			newList[i] = list[i];
+		}
+		
+		list = newList;
 	}
    
 }
