@@ -27,71 +27,98 @@ import utilities.QueueADT;
  */
 public class MyQueue implements QueueADT
 {
-
+	private MyDLL list;
+	
+	public MyQueue() {
+		list = new MyDLL();
+	}
+	
 	@Override
 	public void enqueue(String toAdd) throws NullPointerException {
-		// TODO Auto-generated method stub
-		
+		if (toAdd == null) {
+			throw new NullPointerException("input cannot be null");
+		}
+		list.add(toAdd);
 	}
 
 	@Override
 	public String dequeue() throws EmptyQueueException {
-		// TODO Auto-generated method stub
-		return null;
+		if (list.isEmpty()) {
+			throw new EmptyQueueException("queue is empty");
+		}
+		
+		return list.remove(0);
 	}
 
 	@Override
 	public String peek() throws EmptyQueueException {
-		// TODO Auto-generated method stub
-		return null;
+		if (list.isEmpty()) {
+			throw new EmptyQueueException("queue is empty");
+		}
+		return list.get(0);
 	}
 
 	@Override
 	public void dequeueAll() {
-		// TODO Auto-generated method stub
+		list.clear();
 		
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
+		if (list.size() == 0) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean contains(String toFind) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return false;
+		if (toFind == null) {
+			throw new NullPointerException("input cannot be null");
+		}
+		return list.contains(toFind);
 	}
 
 	@Override
 	public int search(String toFind) {
-		// TODO Auto-generated method stub
-		return 0;
+		if (list.indexOf(toFind) == -1) {
+			return -1;
+		}
+		return (list.indexOf(toFind) + 1);
 	}
 
 	@Override
 	public Iterator iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return list.iterator();
 	}
 
 	@Override
 	public boolean equals(QueueADT that) {
-		// TODO Auto-generated method stub
-		return false;
+		if (list.size() != that.size()) {
+			return false;
+		}
+		Iterator list1 = list.iterator();
+		Iterator list2 = that.iterator();
+		while (list1.hasNext()) {
+			if (!list1.next().equals(list2.next())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public String[] toArray(String[] holder) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if (holder == null) {
+			throw new NullPointerException("input cannot be null");
+		}
+		return list.toArray(holder);
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return list.size();
 	}
     
 }
