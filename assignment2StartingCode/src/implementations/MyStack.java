@@ -27,71 +27,71 @@ import utilities.StackADT;
  */
 public class MyStack implements StackADT
 {
+	private MyArrayList list; // last element = top of stack
 
+	/**
+	 * Makes an empty stack.
+	 */
+	public MyStack() {
+		list = new MyArrayList();
+	}
+
+	/**
+	 * Adds an element to the top of the stack.
+	 * @param toAdd the element to push
+	 * @throws NullPointerException if toAdd is null
+	 */
 	@Override
 	public void push(String toAdd) throws NullPointerException {
-		// TODO Auto-generated method stub
-		
+		if (toAdd == null) {
+			throw new NullPointerException();
+		}
+		list.add(toAdd);
 	}
 
+	/**
+	 * Removes the top element and returns it.
+	 * @return the top element
+	 * @throws EmptyStackException if the stack is empty
+	 */
 	@Override
 	public String pop() throws EmptyStackException {
-		// TODO Auto-generated method stub
-		return null;
+		if (list.isEmpty()) {
+			throw new EmptyStackException();
+		}
+		return list.remove(list.size() - 1);
 	}
 
+	/**
+	 * Returns the top element but doesn't remove it.
+	 * @return the top element
+	 * @throws EmptyStackException if the stack is empty
+	 */
 	@Override
 	public String peek() throws EmptyStackException {
-		// TODO Auto-generated method stub
-		return null;
+		if (list.isEmpty()) {
+			throw new EmptyStackException();
+		}
+		return list.get(list.size() - 1);
 	}
 
+	/**
+	 * Empties the stack.
+	 */
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		list.clear();
 	}
 
+	/**
+	 * Checks if the stack is empty.
+	 * @return true if empty
+	 */
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return list.isEmpty();
 	}
 
-	@Override
-	public String[] toArray(String[] holder) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean contains(String toFind) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int search(String toFind) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Iterator iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean equals(StackADT that) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-  
-}
+	/**
+	 * Copies the stack into an array (bottom to top).
+	 * @param holder the
