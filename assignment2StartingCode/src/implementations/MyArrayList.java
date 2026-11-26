@@ -111,7 +111,7 @@ public class MyArrayList implements ListADT
 		
 		//overwrite index and shifting elements back down
 		String element = list[index];
-		for (int i = index; i < size; i++) {
+		for (int i = index; i < size -1; i++) {
 			list[i] = list[i + 1];
 		}
 		size -= 1;
