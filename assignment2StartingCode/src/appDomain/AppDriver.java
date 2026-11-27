@@ -46,6 +46,9 @@ public class AppDriver {
 	 */
 	public static void main(String[] args) {
 		
+		double start_time;
+		double result_time = 0;
+		
 		if (args.length != 1) {
 			System.out.println("Usage: java appDomain.AppDriver <filename>");
 			return;
@@ -102,7 +105,10 @@ public class AppDriver {
 			System.out.println("Unexpected empty queue: " + e.getMessage());
 			return;
 		}
+		start_time = System.nanoTime();
 		printResults(reported, args[0]);
+		result_time = System.nanoTime() - start_time;
+		System.out.println(result_time);
 	}
  
 	/**
