@@ -7,12 +7,43 @@ import java.io.FileReader;
 import java.io.IOException;
 import exceptions.EmptyQueueException;
 
-
+/**
+ * Command-line driver that checks a text file for syntax errors in mismatched brackets.
+ * 
+ * <p>
+ * All brackets are tracked with line and column in which they are found. 
+ * Openers are pushed onto stack, and closers are matched against stack to remove correctly paired brackets.
+ * Un-paired brackets are added to queues, reconciled, and printed in order indicating line and bracket which caused the error.
+ * </p>
+ * 
+ * @author Iris
+ */
 public class AppDriver {
 
+	// All valid opening brackets, indexes of each matches closers.
 	private static final String OPENERS = "({[<";
+
+	// All valid closing brackets indexes in same order as openers.
 	private static final String CLOSERS = ")}]>";
-	
+
+	/**
+	 * Program entry point. Reads the file named by the single command-line
+	 * argument, scans it character by character, and reports every bracket
+	 * that is unmatched or mismatched.
+	 * <p>
+	 * Processing happens in three phases:
+	 * 	<ol>
+	 * 		<li>Scans each line, pushing openers to stack and closers to handleClosing function</li>
+	 * 		<li>Move openers still on stack into error queue</li>
+	 * 		<li>Reconcile error queue against extras queue, record remaining entries as confirmed errors</li>
+	 * 	</ol>
+	 * Prints all errors to command line using printResults function
+	 * </p>
+	 *
+	 * @param One command line argument containing the file path to be checked
+	 * 
+	 * @author Iris
+	 */
 	public static void main(String[] args) {
 		
 		if (args.length != 1) {
@@ -74,6 +105,33 @@ public class AppDriver {
 		printResults(reported, args[0]);
 	}
  
+	/**
+	 * Processes closing brackets checking against stack of openers, and sorting accordingly
+	 * <p>
+	 * Cases handled in following order:
+	 * 	<ol>
+	 * 		<li>If top of stack is matching opener, pop stack</li>
+	 * 		<li>If front of error queue is matching opener, dequeue</li>
+	 * 		<li>If stack empty, enqueue into error queue.</li>
+	 * 		<li>
+	 * 			Search stack for matching opener. If one exists, pop entries down to and including match.
+	 * 			Skipped openers sent to error queue and final report queue. If none exists, enqueue closer in extras queue.
+	 * 		</li>
+	 * 	</ol>
+	 * </p>
+	 *
+	 * @param closing bracket character
+	 * @param line number where closer was found
+	 * @param column where closer was found
+	 * @param stack of openers still awaiting closer
+	 * @param queue of brackets flagged as potential errors
+	 * @param queue of closers that have no matching opener
+	 * @param queue of brackets confirmed as errors, with duplicates removed
+	 * 
+	 * @throws EmptyQueueException if queue operation attempted on empty queue
+	 * 
+	 * @author Iris
+	 */
 	private static void handleClosing(char c, int lineNumber, int column, MyStack stack, MyQueue errorQ, MyQueue extrasQ, MyQueue reported) throws EmptyQueueException {
 		if (!stack.isEmpty() && matches(charOf(stack.peek()), c)) {
 			stack.pop();
@@ -113,39 +171,113 @@ public class AppDriver {
 		}
 	}
  
+	/**
+	 * Encodes bracket and its position within file into single string
+	 *
+	 * @param bracket character
+	 * @param line number where bracket appears
+	 * @param column where bracket appears
+	 * 
+	 * @return encoded string
+	 * 
+	 * @author Iris
+	 */
 	private static String encode(char c, int lineNumber, int column) {
 		return c + ":" + lineNumber + ":" + column;
 	}
  
+	/**
+	 * Extracts bracket character from encoded string
+	 *
+	 * @param encoded string for bracket
+	 * @return bracket character
+	 * 
+	 * @author Iris
+	 */
 	private static char charOf(String entry) {
 		return entry.charAt(0);
 	}
  
+	/**
+	 * Extracts line number from encoded string
+	 *
+	 * @param encoded string for bracket
+	 * @return line number of given bracket
+	 * 
+	 * @throws NumberFormatException 
+	 * 
+	 * @author Iris
+	 */
 	private static int lineOf(String entry) {
 		return Integer.parseInt(entry.substring(2, entry.indexOf(':', 2)));
 	}
  
+	/**
+	 * Extracts column number from encoded string
+	 *
+	 * @param encoded string for bracket
+	 * @return column number of given bracket
+	 * 
+	 * @throws NumberFormatException
+	 * 
+	 * @author Iris
+	 */
 	private static int columnOf(String entry) {
 		return Integer.parseInt(entry.substring(entry.indexOf(':', 2) + 1));
 	}
  
+	/**
+	 * Determines matching bracket pairs
+	 *
+	 * @param opening bracket to check
+	 * @param closing bracket to check
+	 * 
+	 * @return boolean indicating whether brackets pair
+	 * 
+	 * @author Iris
+	 */
 	private static boolean matches(char open, char close) {
 		int i = OPENERS.indexOf(open);
 		return i != -1 && CLOSERS.indexOf(close) == i;
 	}
  
+	/**
+	 * Empties queue, recording all entries as confirmed errors
+	 *
+	 * @param queue to empty
+	 * @param reports queue
+	 * 
+	 * @throws EmptyQueueException
+	 */
 	private static void drain(MyQueue q, MyQueue reported) throws EmptyQueueException {
 		while (!q.isEmpty()) {
 			recordError(reported, q.dequeue());
 		}
 	}
 
+	/**
+	 * Adds entry to confirmed errors queue unless excluding duplicates
+	 *
+	 * @param reports queue 
+	 * @param bracket to record
+	 * 
+	 * @author Iris
+	 */
 	private static void recordError(MyQueue reported, String entry) {
 		if (!reported.contains(entry)) {
 			reported.enqueue(entry);
 		}
 	}
  
+	/**
+	 * Prints final report of confirmed errors. If no errors recorded, prints "no errors" message. Else, prints message indicating file with errors.
+	 * Errors sorted into ascending order prior to printing. Prints each error including line and offending character.
+	 *
+	 * @param errors queue
+	 * @param file being checked
+	 * 
+	 * @author Iris
+	 */
 	private static void printResults(MyQueue reported, String filename) {
 		if (reported.isEmpty()) {
 			System.out.println("File: " + filename + " has no errors.");
